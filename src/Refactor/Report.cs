@@ -94,20 +94,21 @@ public static class Report
                 var className = relation.classDeclaration.classDeclaration.Identifier.Text;
                 var file = relation.classDeclaration.parent.path;
                 
-                var newClass = $"class {className} : {newSuperclassName}\n{{\n    public {returnTypeA} NewMethod({GetFormattedParamsList(methodParamsA)}) : base({GetFormattedParamsList(methodParamsA)})\n    {{\n          {methodBodyA}\n     }}\n}}";
+                var newClass = $"class {className} : {newSuperclassName}\n{{\n    public {returnTypeA} NewMethod({GetFormattedParamsList(methodParamsA)}) : base({GetFormattedParamsList(methodParamsA)})\n    {{\n          {methodBodyA}\n     }}{{\n    ***** {GetFormattedMethodListWithExclude(relation.classDeclaration.classDeclaration.Members.OfType<MethodDeclarationSyntax>(), relation.methodDeclaration)}\n}} {{\n    {GetFormattedMethodListWithExclude(relation.classDeclaration.classDeclaration.Members.OfType<MethodDeclarationSyntax>(), relation.methodDeclaration)}\n}} \n}}";
+                
                 var newClassPath = Path.Combine(file.Substring(0, file.LastIndexOf('\\')), $"generated\\{className}.cs");
                 FilesManager.SaveFile(newClassPath, newClass);
             }
         }
     }
-    private static string GetFormattedMethodListWithExclude(IEnumerable<MethodDeclarationSyntax> methods)
+    private static string GetFormattedMethodListWithExclude(IEnumerable<MethodDeclarationSyntax> methods, MethodDeclarationSyntax excludeMethod)
     {
-        // WIP
-        return string.Join("\n", methods.Select(m =>  $"{m.ReturnType} {m.Identifier} ({GetFormattedParamsList(m.ParameterList.Parameters)}) {{\n{m.Body}\n}}"));;
+        return string.Join("\n", methods.Where(m => m != excludeMethod).Select(m =>  $"{m.ReturnType} {m.Identifier} ({GetFormattedParamsList(m.ParameterList.Parameters)}) {{\n{m.Body}\n}}"));
     }
+  
 
     private static string GetFormattedParamsList(IEnumerable<ParameterSyntax> parameters)
     {
-        return string.Join(", ", parameters.Select(p =>  $"{p.Type} {p.Identifier}"));;
+        return string.Join(", ", parameters.Select(p =>  $"{p.Type} {p.Identifier}"));
     }
 }

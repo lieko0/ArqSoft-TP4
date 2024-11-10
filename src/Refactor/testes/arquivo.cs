@@ -9,10 +9,10 @@ namespace ExampleNamespace
             Console.WriteLine("Eating...");
         }
 
-        public void Sleep()
+        /*public void Sleep()
         {
             Console.WriteLine("Sleeping...");
-        }
+        }*/
     }
 
     class Dog
@@ -22,10 +22,10 @@ namespace ExampleNamespace
             Console.WriteLine("Eating...");
         }
 
-        public void Sleep()
+        /*public void Sleep()
         {
             Console.WriteLine("Sleeping...");
-        }
+        }*/
 
         public void Bark()
         {
@@ -40,10 +40,10 @@ namespace ExampleNamespace
             Console.WriteLine("Eating...");
         }
 
-        public void Sleep()
+        /*public void Sleep()
         {
             Console.WriteLine("Sleeping...");
-        }
+        }*/
 
         public void Meow()
         {
