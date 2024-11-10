@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Refactor.dto;
 using Refactor.utils;
@@ -70,9 +71,12 @@ public class Analyzer
             {
                 var sameReturnType = HasSameReturnType(aMethod, bMethod);
                 var sameParameters = HasSameParameters(aMethod, bMethod);
-                var areSimilar = CheckBodySimilarity(aMethod, bMethod);
+                var similarName = CheckNameSimilarity(aMethod, bMethod);
+                var similarBody = CheckBodySimilarity(aMethod, bMethod);
+                
+                Console.WriteLine($"Method {aMethod.Identifier.Text} and {bMethod.Identifier.Text} \t\t\t Type: {sameReturnType} \t Parameters: {sameParameters} \t Name: {similarName} \t Body: {similarBody}");
 
-                if (sameReturnType && sameParameters && areSimilar)
+                if (sameReturnType && sameParameters && similarName && similarBody)
                 {
                     _refactorOpportunities.Add(new RefactorOportunity(a, b, aMethod, bMethod));
                 }
@@ -92,11 +96,32 @@ public class Analyzer
         return aParams.SequenceEqual(bParams);
     }
     
-
+    private bool CheckNameSimilarity(MethodDeclarationSyntax a, MethodDeclarationSyntax b)
+    {
+        return RabinKarpSimilarity.CalculateSimilarity(a.Identifier.Text, b.Identifier.Text, 3) >= MAX_ALLOWED_SIMILARITY;
+    }
     private bool CheckBodySimilarity(MethodDeclarationSyntax a, MethodDeclarationSyntax b)
     {
         var aBody = a.Body?.ToString() ?? "";
+        var aBodyAsTokens = a.DescendantNodesAndTokens()?.Select(t => t.Kind().ToString()).ToList();
+        var aBodyAsTokensLines = a.DescendantNodesAndTokens()?.Select(l =>
+            (l.GetLocation()?.ToString(), l.ToString(), l.Kind().ToString())
+        ).ToList();
+        /*if (aBodyAsTokens != null)
+        {
+            foreach (var token in aBodyAsTokens)
+            {
+                Console.WriteLine($"{token}");
+            }
+        }*/
+        if (aBodyAsTokensLines != null)
+        {
+            foreach (var token in aBodyAsTokensLines)
+            {
+                Console.WriteLine($"{token}");
+            }
+        }
         var bBody = b.Body?.ToString() ?? "";
-        return RabinKarpSimilarity.CalculateSimilarity(aBody, bBody) >= MAX_ALLOWED_SIMILARITY;
+        return RabinKarpSimilarity.CalculateSimilarity(aBody, bBody, RabinKarpSimilarity.GetAvgLinesLength(aBody,bBody)) >= MAX_ALLOWED_SIMILARITY;
     }
 }
