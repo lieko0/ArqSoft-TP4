@@ -14,4 +14,16 @@
       <PackageReference Include="Soenneker.Utils.String.CosineSimilarity" Version="2.1.591" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="testes\generated\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="testes\generated\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="testes\generated\**" />
+    </ItemGroup>
+
 </Project>

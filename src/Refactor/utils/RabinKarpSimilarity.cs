@@ -37,8 +37,13 @@ class RabinKarpSimilarity
     }
 
     // Method to calculate similarity score between two strings
-    public static double CalculateSimilarity(string str1, string str2, int subLen = 1)
+    public static double CalculateSimilarity(string str1, string str2, int subLen = 0)
     {
+        if (subLen == 0)
+        {
+            // Calculate average line length of both strings
+            subLen = GetAvgLinesLength(str1, str2);
+        }
         var hashes1 = ComputeRollingHashes(str1, subLen);
         var hashes2 = ComputeRollingHashes(str2, subLen);
 
@@ -54,7 +59,7 @@ class RabinKarpSimilarity
         return (double)matches / totalSubstrings;
     }
     
-    public static int GetAvgLinesLength(string str1, string str2)
+    private static int GetAvgLinesLength(string str1, string str2)
     {
         string[] str1Lines = str1.Split('\n');
         string[] str2Lines = str2.Split('\n');

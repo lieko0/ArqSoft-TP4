@@ -76,7 +76,7 @@ public class Analyzer
                 
                 Console.WriteLine($"Method {aMethod.Identifier.Text} and {bMethod.Identifier.Text} \t\t\t Type: {sameReturnType} \t Parameters: {sameParameters} \t Name: {similarName} \t Body: {similarBody}");
 
-                if (sameReturnType && sameParameters && similarName && similarBody)
+                if (sameReturnType && sameParameters && similarName)
                 {
                     _refactorOpportunities.Add(new RefactorOportunity(a, b, aMethod, bMethod));
                 }
@@ -103,25 +103,18 @@ public class Analyzer
     private bool CheckBodySimilarity(MethodDeclarationSyntax a, MethodDeclarationSyntax b)
     {
         var aBody = a.Body?.ToString() ?? "";
-        var aBodyAsTokens = a.DescendantNodesAndTokens()?.Select(t => t.Kind().ToString()).ToList();
-        var aBodyAsTokensLines = a.DescendantNodesAndTokens()?.Select(l =>
-            (l.GetLocation()?.ToString(), l.ToString(), l.Kind().ToString())
+        /*var aBodyAsTokensLines = a.DescendantNodesAndTokens()?.Select(l =>
+            (l.GetLocation()?.ToString(), l.ToString(), l.Kind().ToString(), l.IsNode, l.IsToken)
         ).ToList();
-        /*if (aBodyAsTokens != null)
-        {
-            foreach (var token in aBodyAsTokens)
-            {
-                Console.WriteLine($"{token}");
-            }
-        }*/
         if (aBodyAsTokensLines != null)
         {
             foreach (var token in aBodyAsTokensLines)
             {
-                Console.WriteLine($"{token}");
+                if(token.Item5)
+                    Console.WriteLine($"{token.Item2} <{token.Item3}>");
             }
-        }
+        }*/
         var bBody = b.Body?.ToString() ?? "";
-        return RabinKarpSimilarity.CalculateSimilarity(aBody, bBody, RabinKarpSimilarity.GetAvgLinesLength(aBody,bBody)) >= MAX_ALLOWED_SIMILARITY;
+        return RabinKarpSimilarity.CalculateSimilarity(aBody, bBody, 0) >= MAX_ALLOWED_SIMILARITY;
     }
 }

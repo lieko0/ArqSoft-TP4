@@ -23,7 +23,8 @@ class Program
         
         var opportunities = analyzer.GetRefactorOpportunities();
         
-        // Report.GenerateReport(opportunities);
+        Report.GenerateReport(opportunities);
+        Report.GenerateFiles(opportunities);
     }
     
 }

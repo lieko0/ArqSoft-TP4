@@ -2,30 +2,6 @@ using System;
 
 namespace ExampleNamespace
 {
-    class ExampleClass
-    {
-        public void MethodA()
-        {
-            Console.WriteLine("ExampleClass MethodA");
-        }
-    }
-
-    class ExampleClassDuplicate
-    {
-        public void MethodA()
-        {
-            Console.WriteLine("ExampleClass MethodA");
-        }
-    }
-
-    class AnotherClass
-    {
-        public void MethodB()
-        {
-            Console.WriteLine("AnotherClass MethodB");
-        }
-    }
-
     class Animal
     {
         public void Eat()
